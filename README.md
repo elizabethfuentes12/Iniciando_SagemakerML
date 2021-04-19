@@ -24,6 +24,8 @@ Amazon [SageMaker](https://aws.amazon.com/es/sagemaker/) ayuda a los científico
 
 Fuente y github con modelos: [Casos de uso](https://aws.amazon.com/es/sagemaker/getting-started/)
 
+___
+
 ## Algoritmos integrados de AWS Sagemaker
 Fuente: https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html
 
@@ -36,6 +38,7 @@ AWS Sagemaker proporciona una serie de algoritmos integrados que ayuda a mejorar
 |[Análisis de texto](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-text-analysis) |Clasificación de textos - Traducción automática de Algoritmo - Resumir texto - Texto a voz |
 |[Gema Image Processing](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-image-processing) |Clasificación de imágenes y etiquetas múltiple - Detección y clasificación de objetos - Visión artificial |
 
+___
 
 ## Tutorial Crear, entrenar e implementar un modelo de Machine Learning con AWS Sagemaker
 
@@ -101,7 +104,7 @@ Para este tutorial, utilizaremos los valores predeterminados en los demás campo
 
 En este paso, utilizará su bloc de notas de Amazon SageMaker a fin de procesar previamente los datos que necesita para entrenar su modelo de aprendizaje automático.
 
-## 3a. 
+### 3a. 
 
 En la página Instancias de bloc de notas, aguarde hasta que la instancia MySageMakerInstance haya pasado del estado Pendiente al estado En servicio.
 
@@ -228,8 +231,68 @@ xgb.fit({'train': s3_input_train})
 ```
 ## Paso 5: Implemente el modelo
 
+En este paso, implementará el modelo entrenado en un punto de enlace, cambiará el formato y cargará los datos CSV. Luego, ejecutará el modelo para crear predicciones.
 
+### 5a. 
+Para implementar el modelo en un servidor y crear un punto de enlace al que pueda acceder, copie el siguiente código en la próxima celda de código y seleccione Ejecutar:
+
+```python
+xgb_predictor = xgb.deploy(initial_instance_count=1,instance_type='ml.m4.xlarge')
+```
+### 5b. 
+Para predecir si los clientes de los datos de prueba se inscribieron o no en el producto del banco, copie el siguiente código en la próxima celda de código y seleccione Ejecutar:
+
+```python
+test_data_array = test_data.drop(['y_no', 'y_yes'], axis=1).values #load the data into an array
+xgb_predictor.content_type = 'text/csv' # set the data type for an inference
+xgb_predictor.serializer = csv_serializer # set the serializer type
+predictions = xgb_predictor.predict(test_data_array).decode('utf-8') # predict!
+predictions_array = np.fromstring(predictions[1:], sep=',') # and turn the prediction into an array
+print(predictions_array.shape)
+
+```
+## Paso 6. Evalúe el rendimiento del modelo
+En este paso, evaluará el rendimiento y la precisión del modelo de aprendizaje automático.
+
+### 6a. 
+
+Copie y pegue el siguiente código y seleccione Ejecutar para comparar los valores reales con los valores predichos en una tabla denominada matriz de confusión.
+
+En función de las predicciones, podemos concluir que usted predijo que un cliente se inscribiría para un certificado de depósito exactamente para el 90 % de los clientes en los datos de prueba, con una precisión del 65 % (278/429) para los inscritos y del 90 % (10 785/11 928) para los no inscritos.
+
+```python
+cm = pd.crosstab(index=test_data['y_yes'], columns=np.round(predictions_array), rownames=['Observed'], colnames=['Predicted'])
+tn = cm.iloc[0,0]; fn = cm.iloc[1,0]; tp = cm.iloc[1,1]; fp = cm.iloc[0,1]; p = (tp+tn)/(tp+tn+fp+fn)*100
+print("\n{0:<20}{1:<4.1f}%\n".format("Overall Classification Rate: ", p))
+print("{0:<15}{1:<15}{2:>8}".format("Predicted", "No Purchase", "Purchase"))
+print("Observed")
+print("{0:<15}{1:<2.0f}% ({2:<}){3:>6.0f}% ({4:<})".format("No Purchase", tn/(tn+fn)*100,tn, fp/(tp+fp)*100, fp))
+print("{0:<16}{1:<1.0f}% ({2:<}){3:>7.0f}% ({4:<}) \n".format("Purchase", fn/(tn+fn)*
+
+```
+
+## Paso 7: Termine los recursos
+En este paso, terminará los recursos relacionados con Amazon SageMaker.
+
+Importante: Terminar los recursos que no se utilizan de forma activa reduce los costos, y es una práctica recomendada. No terminar sus recursos generará cargos.
+
+### 7a. 
+Para eliminar el punto de enlace de Amazon SageMaker y los objetos de su bucket de S3, copie, pegue y Ejecute el siguiente código:  
+
+```python
+sagemaker.Session().delete_endpoint(xgb_predictor.endpoint)
+bucket_to_delete = boto3.resource('s3').Bucket(bucket_name)
+bucket_to_delete.objects.all().delete()
+
+```
+___
+
+## ¡Felicitaciones!
+
+Ha aprendido a utilizar Amazon SageMaker para preparar, entrenar, implementar y evaluar un modelo aprendizaje automático. Amazon SageMaker facilita la creación de modelos de aprendizaje automático y le proporciona todo lo necesario para conectarse rápidamente con los datos de entrenamiento y para seleccionar el mejor algoritmo y marco de trabajo para su aplicación, mientras administra la infraestructura subyacente completa, de manera que pueda entrenar modelos a escala de petabytes.
+___
 
 ## Ejemplos AWS Sagemaker
+Para que continues aprendiendo te dejo un link con varios ejemplos para practicar:
 
 https://github.com/aws/amazon-sagemaker-examples

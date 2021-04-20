@@ -66,7 +66,7 @@ Diríjase a la consola de Amazon SageMaker.
 
 !["sagemaker"](imagenes/sage.png)
 
-Abra SageMaker
+Abra **SageMaker**
 
 ## Paso 2: Cree una instancia de bloc de notas de Amazon SageMaker
 
@@ -74,7 +74,7 @@ En este paso, creará una instancia de bloc de notas de Amazon SageMaker.
  
 ### 2.a 
 
-Abra notebook instances
+Abra **notebook instances**
 
 !["sagemaker"](imagenes/dos.png)
 
@@ -83,22 +83,73 @@ y seleccione Create notebook Instance en la parte superior derecha
 !["sagemaker"](imagenes/dosa.png)
 
 ### 2b. 
-En la página Crear instancia de bloc de notas, escriba un nombre en el campo Nombre de la instancia de bloc de notas. Este tutorial utiliza MySageMakerInstance como nombre de la instancia, pero puede elegir un nombre diferente si lo desea.
+En la página **Crear instancia de bloc de notas**, escriba un nombre en el campo **Nombre de la instancia de bloc de notas**. Este tutorial utiliza **MySageMakerInstance** como nombre de la instancia, pero puede elegir un nombre diferente si lo desea.
 
-Para este tutorial, puede mantener el Tipo de instancia de bloc de notas predeterminado ml.t2.medium.
+Para este tutorial, puede mantener el **Tipo de instancia de bloc de notas** predeterminado **ml.t2.medium**.
 
-Para permitir que la instancia de bloc de notas acceda a Amazon S3 y pueda cargar datos de manera segura en este servicio, se debe especificar un rol de IAM. En el campo Rol de IAM, elija Crear un nuevo rol para que Amazon SageMaker cree un rol con los permisos necesarios y lo asigne a su instancia. De forma alternativa, puede elegir un rol de IAM existente en su cuenta para este fin.
+!["sagemaker"](imagenes/2b.png)
+
+Para permitir que la instancia de bloc de notas acceda a Amazon S3 y pueda cargar datos de manera segura en este servicio, se debe especificar un rol de IAM. En el campo **Rol de IAM**, elija **Crear un nuevo rol** para que Amazon SageMaker cree un rol con los permisos necesarios y lo asigne a su instancia. De forma alternativa, puede elegir un rol de IAM existente en su cuenta para este fin.
+
+!["sagemaker"](imagenes/2b2.png)
+
 
 ### 2c. 
 
-En el cuadro Crear un rol de IAM, seleccione Cualquier bucket de S3. Esto permite que su instancia de Amazon SageMaker acceda a todos los buckets de S3 de su cuenta. Más adelante en este tutorial, creará un nuevo bucket de S3. Sin embargo, si ya cuenta con un bucket que desea utilizar, seleccione Buckets de S3 específicos e indique el nombre del bucket.
-Elija Crear rol.
+En el cuadro **Crear un rol de IAM**, seleccione **Cualquier bucket de S3**. Esto permite que su instancia de Amazon SageMaker acceda a todos los buckets de S3 de su cuenta. Más adelante en este tutorial, creará un nuevo bucket de S3. Sin embargo, si ya cuenta con un bucket que desea utilizar, seleccione **Buckets de S3 específicos** e indique el nombre del bucket.
+
+Elija **Crear rol**.
+
+!["sagemaker"](imagenes/2b3.png)
 
 ### 2d. 
 
-Tenga en cuenta que Amazon SageMaker creó para usted un rol denominado AmazonSageMaker-ExecutionRole-***.
+Tenga en cuenta que Amazon SageMaker creó para usted un rol denominado **AmazonSageMaker-ExecutionRole-*****.
 
-Para este tutorial, utilizaremos los valores predeterminados en los demás campos. Elija Crear instancia de bloc de notas.
+!["sagemaker"](imagenes/2d.png)
+
+Para este tutorial, utilizaremos los valores predeterminados en los demás campos. Elija **Crear instancia de bloc de 
+notas**.
+
+### 2e. 
+En la página **Instancias de bloc de notas**, debería ver su nueva instancia de bloc de notas **MySageMakerInstance** con el estado **Pendiente**.
+
+!["sagemaker"](imagenes/2e.png)
+
+Su instancia de bloc de notas debería pasar del estado **Pendiente** al estado **En servicio** en menos de dos minutos.
+
+### 2f
+Para este paso debes detener la instancia en **Acciones** --> **Detener** 
+
+!["sagemaker"](imagenes/detener.png)
+
+Evita que la instancia de SageMaker se quede activa cuando no la estés usando y así no incurrir en gastos innecesarios, para eso debes agregar la **Configuración del ciclo de vida**.
+
+Esto lo puedes realizar al momento de crear la maquina o luego de crearla editando la configuración. 
+
+Entra a la configuración de la instancia dando click sobre su nombre: 
+
+!["sagemaker"](imagenes/2f.png)
+
+Presiona editar, arriba a la derecha, en **Configuración adicional** selecciona **Crear una nueva configuración de ciclo de vida**, en la ventana emergente nombralo como prefieras y abre la lista de scripts para iniciar: 
+
+!["sagemaker"](imagenes/2f2.png)
+
+El link te llevara al GitHub [amazon-sagemaker-notebook-instance-lifecycle-config-samples](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-sample) , entra a la carpeta scripts --> auto-stop-idle y copia el codigo en [on-start.sh](https://github.com/aws-samples/amazon-sagemaker-notebook-instance-lifecycle-config-samples/blob/master/scripts/auto-stop-idle/on-start.sh) 
+
+Pega el codigo en la ventana emergente y avanza con **Crear una configuración**
+
+!["sagemaker"](imagenes/2f3.png)
+
+### 2e
+Agrega un repocitorio Git a tu instancia. 
+
+En la misma edición del paso anterior, ve al fondo donde dice **Repositorios Git - opcional**, selecciona **Clone un repositorio Git público en esta instancia de bloc de notas solamente** y copia el preositorio creado para este ejemplo [Iniciando_SagemakerML](https://github.com/elizabethfuentes12/Iniciando_SagemakerML)
+
+
+!["sagemaker"](imagenes/2e2.png)
+
+Finaliza con **Actualizar instancia del bloc de notas**
 
 ## Paso 3: Prepare los datos
 
@@ -106,19 +157,23 @@ En este paso, utilizará su bloc de notas de Amazon SageMaker a fin de procesar 
 
 ### 3a. 
 
-En la página Instancias de bloc de notas, aguarde hasta que la instancia MySageMakerInstance haya pasado del estado Pendiente al estado En servicio.
+En la página **Instancias de bloc de notas**, aguarde hasta que la instancia **MySageMakerInstance** haya pasado del estado **Pendiente** al estado **En servicio**.
 
-Después de que el estado cambie a En servicio, seleccione la instancia MySageMakerInstance y ábrala a través del menú desplegable Acciones o elija la opción Abrir Jupyter, que aparece junto al estado En servicio.
+Después de que el estado cambie a **En servicio**, seleccione la instancia **MySageMakerInstance** y ábrala a través del menú desplegable **Acciones** o elija la opción **Abrir JupyterLab**, que aparece junto al estado **En servicio**.
 
 ### 3b. 
 
-Después de que Jupyter se abra, en la pestaña Archivos, elija Nuevo y, luego, conda_python3. 
+Después de que Jupyter se abra, en la pestaña **Archivos**, elija **Nuevo**, **Notebook** y, luego, **conda_python3**. 
 
 ### 3c. 
 
-Para preparar los datos, entrenar el modelo de aprendizaje automático e implementarlo, deberá importar algunas bibliotecas y definir algunas variables del entorno en su entorno de bloc de notas de Jupyter. Copie el siguiente código en la celda de código de su instancia y seleccione Ejecutar.
+Para preparar los datos, entrenar el modelo de aprendizaje automático e implementarlo, deberá importar algunas bibliotecas y definir algunas variables del entorno en su entorno de bloc de notas de Jupyter. Copie el siguiente código en la celda de código de su instancia y seleccione **Ejecutar** o las teclas **Shift+Enter**.
 
-Mientras se ejecuta el código, aparecerá el símbolo * entre corchetes, tal como se muestra en la primera captura de pantalla de la derecha. Luego de unos pocos segundos, se completará la ejecución del código, el símbolo * se reemplazará por el número 1 y verá un mensaje de finalización exitosa, tal como se muestra en la segunda captura de pantalla de la derecha. 
+Al finalizar debe verse como la imagen a continación:
+
+!["sagemaker"](imagenes/3c.png)
+
+
 
 ```python 
 # import libraries
@@ -148,7 +203,7 @@ En este paso, creará un bucket de S3 que almacenará sus datos para este tutori
 
 Copie el siguiente código en la próxima celda de código de su bloc de notas y cambie el nombre del bucket de S3 para que sea único. Los nombres de los buckets de S3 deben ser únicos a nivel mundial y, además, deben contar con algunas restricciones y limitaciones.
 
-Seleccione Ejecutar. Si no recibe un mensaje de finalización exitosa, cambie el nombre del bucket y vuelva a intentarlo.
+Seleccione **Ejecutar**. Si no recibe un mensaje de finalización exitosa, cambie el nombre del bucket y vuelva a intentarlo.
 
 ```python 
 bucket_name = 'your-s3-bucket-name' # <--- CHANGE THIS VARIABLE TO A UNIQUE NAME FOR YOUR BUCKET
@@ -165,7 +220,7 @@ except Exception as e:
 ```
 ### 3e. 
 
-A continuación, debe descargar los datos en su instancia de Amazon SageMaker y cargarlos en un marco de datos. Copie y Ejecute el siguiente código:
+A continuación, debe descargar los datos en su instancia de Amazon SageMaker y cargarlos en un marco de datos. Copie y **Ejecute** el siguiente código:
 
 ```python 
 try:
@@ -186,11 +241,11 @@ except Exception as e:
 
 Ahora, mezclaremos los datos y los dividiremos en datos de entrenamiento y de prueba.
 
-Los datos de entrenamiento (el 70 % de los clientes) se utilizarán durante el ciclo de entrenamiento del modelo. Utilizaremos la optimización basada en gradientes para refinar de forma iterativa los parámetros del modelo. La optimización basada en gradientes es una forma de encontrar valores de parámetros del modelo que minimicen sus errores, mediante el uso de gradientes de la función de pérdida del modelo.
+Los **datos de entrenamiento** (el 70 % de los clientes) se utilizarán durante el ciclo de entrenamiento del modelo. Utilizaremos la optimización basada en gradientes para refinar de forma iterativa los parámetros del modelo. La optimización basada en gradientes es una forma de encontrar valores de parámetros del modelo que minimicen sus errores, mediante el uso de gradientes de la función de pérdida del modelo.
 
-Los datos de prueba (el 30 % restante de los clientes) se utilizarán para evaluar el rendimiento del modelo y para medir el nivel de generalización de los datos nuevos del modelo entrenado.
+Los **datos de prueba** (el 30 % restante de los clientes) se utilizarán para evaluar el rendimiento del modelo y para medir el nivel de generalización de los datos nuevos del modelo entrenado.
 
-Copie el siguiente código en una nueva celda de código y seleccione Ejecutar para mezclar y dividir los datos:
+Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar** para mezclar y dividir los datos:
 
 ```python
 train_data, test_data = np.split(model_data.sample(frac=1, random_state=1729), [int(0.7 * len(model_data))])
@@ -204,7 +259,7 @@ En este paso, entrenará su modelo de aprendizaje automático con el conjunto de
 ### 4a. 
 Para utilizar un modelo XGBoost prediseñado de Amazon SageMaker, deberá cambiar el formato del encabezado y la primera columna de los datos de entrenamiento y cargar los datos desde el bucket de S3.
 
-Copie el siguiente código en una nueva celda de código y seleccione Ejecutar para cambiar el formato y cargar los datos:
+Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar** para cambiar el formato y cargar los datos:
 
 ```python
 pd.concat([train_data['y_yes'], train_data.drop(['y_no', 'y_yes'], axis=1)], axis=1).to_csv('train.csv', index=False, header=False)
@@ -214,7 +269,7 @@ s3_input_train = sagemaker.s3_input(s3_data='s3://{}/{}/train'.format(bucket_nam
 ```
 ### 4b. 
 
-A continuación, deberá configurar la sesión de Amazon SageMaker, crear una instancia del modelo XGBoost (un estimador) y definir los hiperparámetros del modelo. Copie el siguiente código en una nueva celda de código y seleccione Ejecutar:
+A continuación, deberá configurar la sesión de Amazon SageMaker, crear una instancia del modelo XGBoost (un estimador) y definir los hiperparámetros del modelo. Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar**:
 
 ```python
 sess = sagemaker.Session()
@@ -222,7 +277,7 @@ xgb = sagemaker.estimator.Estimator(containers[my_region],role, train_instance_c
 xgb.set_hyperparameters(max_depth=5,eta=0.2,gamma=4,min_child_weight=6,subsample=0.8,silent=0,objective='binary:logistic',num_round=100)
 ```
 ### 4c. 
-Con los datos cargados y el estimador XGBoost configurado, entrene el modelo a través de la optimización basada en gradientes en una instancia ml.m4.xlarge; copie el siguiente código en la próxima celda de código y seleccione Ejecutar.
+Con los datos cargados y el estimador XGBoost configurado, entrene el modelo a través de la optimización basada en gradientes en una instancia **ml.m4.xlarge**; copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**.
 
 Luego de algunos minutos, debería comenzar a ver los registros de entrenamiento que se generen.
 
@@ -234,13 +289,13 @@ xgb.fit({'train': s3_input_train})
 En este paso, implementará el modelo entrenado en un punto de enlace, cambiará el formato y cargará los datos CSV. Luego, ejecutará el modelo para crear predicciones.
 
 ### 5a. 
-Para implementar el modelo en un servidor y crear un punto de enlace al que pueda acceder, copie el siguiente código en la próxima celda de código y seleccione Ejecutar:
+Para implementar el modelo en un servidor y crear un punto de enlace al que pueda acceder, copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**:
 
 ```python
 xgb_predictor = xgb.deploy(initial_instance_count=1,instance_type='ml.m4.xlarge')
 ```
 ### 5b. 
-Para predecir si los clientes de los datos de prueba se inscribieron o no en el producto del banco, copie el siguiente código en la próxima celda de código y seleccione Ejecutar:
+Para predecir si los clientes de los datos de prueba se inscribieron o no en el producto del banco, copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**:
 
 ```python
 test_data_array = test_data.drop(['y_no', 'y_yes'], axis=1).values #load the data into an array
@@ -256,7 +311,7 @@ En este paso, evaluará el rendimiento y la precisión del modelo de aprendizaje
 
 ### 6a. 
 
-Copie y pegue el siguiente código y seleccione Ejecutar para comparar los valores reales con los valores predichos en una tabla denominada matriz de confusión.
+Copie y pegue el siguiente código y seleccione **Ejecutar** para comparar los valores reales con los valores predichos en una tabla denominada **matriz de confusión**.
 
 En función de las predicciones, podemos concluir que usted predijo que un cliente se inscribiría para un certificado de depósito exactamente para el 90 % de los clientes en los datos de prueba, con una precisión del 65 % (278/429) para los inscritos y del 90 % (10 785/11 928) para los no inscritos.
 
@@ -274,10 +329,10 @@ print("{0:<16}{1:<1.0f}% ({2:<}){3:>7.0f}% ({4:<}) \n".format("Purchase", fn/(tn
 ## Paso 7: Termine los recursos
 En este paso, terminará los recursos relacionados con Amazon SageMaker.
 
-Importante: Terminar los recursos que no se utilizan de forma activa reduce los costos, y es una práctica recomendada. No terminar sus recursos generará cargos.
+**Importante:** Terminar los recursos que no se utilizan de forma activa reduce los costos, y es una práctica recomendada. No terminar sus recursos generará cargos.
 
 ### 7a. 
-Para eliminar el punto de enlace de Amazon SageMaker y los objetos de su bucket de S3, copie, pegue y Ejecute el siguiente código:  
+Para eliminar el punto de enlace de Amazon SageMaker y los objetos de su bucket de S3, copie, pegue y **Ejecute** el siguiente código:  
 
 ```python
 sagemaker.Session().delete_endpoint(xgb_predictor.endpoint)

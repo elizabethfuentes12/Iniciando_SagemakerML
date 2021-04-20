@@ -167,13 +167,7 @@ Después de que Jupyter se abra, en la pestaña **Archivos**, elija **Nuevo**, *
 
 ### 3c. 
 
-Para preparar los datos, entrenar el modelo de aprendizaje automático e implementarlo, deberá importar algunas bibliotecas y definir algunas variables del entorno en su entorno de bloc de notas de Jupyter. Copie el siguiente código en la celda de código de su instancia y seleccione **Ejecutar** o las teclas **Shift+Enter**.
-
-Al finalizar debe verse como la imagen a continación:
-
-!["sagemaker"](imagenes/3c.png)
-
-
+Para preparar los datos, entrenar el modelo de aprendizaje automático e implementarlo, deberá importar algunas bibliotecas y definir algunas variables del entorno en su entorno de bloc de notas de Jupyter. Copie el siguiente código o ejecutelo directamente de la carpeta **codigo** en el [GitHub](https://github.com/elizabethfuentes12/Iniciando_SagemakerML) creado para este tutorial en la celda de código de su instancia y seleccione **Ejecutar** o las teclas **Shift+Enter**.
 
 ```python 
 # import libraries
@@ -197,6 +191,11 @@ containers = {'us-west-2': '433757028032.dkr.ecr.us-west-2.amazonaws.com/xgboost
 my_region = boto3.session.Session().region_name # set the region of the instance
 print("Success - the MySageMakerInstance is in the " + my_region + " region. You will use the " + containers[my_region] + " container for your SageMaker endpoint.")
 ```
+
+Al finalizar debe verse como la imagen a continación:
+
+!["sagemaker"](imagenes/3c.png)
+
 ### 3d. 
 
 En este paso, creará un bucket de S3 que almacenará sus datos para este tutorial.
@@ -218,6 +217,7 @@ except Exception as e:
     print('S3 error: ',e)
 
 ```
+
 ### 3e. 
 
 A continuación, debe descargar los datos en su instancia de Amazon SageMaker y cargarlos en un marco de datos. Copie y **Ejecute** el siguiente código:
@@ -236,6 +236,14 @@ except Exception as e:
     print('Data load error: ',e)
 
 ```
+Si la descarga es exitosa debe ver el siguiente mensaje: 
+
+!["sagemaker"](imagenes/3e.png)
+
+Y el siguiente archivo aparecera en su instancia:
+
+!["sagemaker"](imagenes/3e2.png)
+
 
 ### 3f. 
 

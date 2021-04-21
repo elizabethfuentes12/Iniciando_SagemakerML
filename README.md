@@ -33,10 +33,10 @@ AWS Sagemaker proporciona una serie de algoritmos integrados que ayuda a mejorar
 
 | Modelo | Tipos de problemas | Algoritmos |
 |:---:|:---:|:---:|
-|[Aprendizaje supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-supervised-learning)| Clasificación binaria/de varias clases - Regresión - Previsión de series temporales |Linear Learner Algorithm - Factorization Machines Algorithm - XGBoost Algorithm - K-Nearest Neighbors (k-NN) Algorithm |
-|[Aprendizaje no supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-unsupervised-learning)|Ingeniería de características: reducción de la dimensionalidad - Detección de anomalías - Integraciones: convierten objetos de grandes dimensiones en espacio de baja dimensionalidad - Agrupación o agrupación en clústeres - Modelado de temas |  |
-|[Análisis de texto](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-text-analysis) |Clasificación de textos - Traducción automática de Algoritmo - Resumir texto - Texto a voz |
-|[Gema Image Processing](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-image-processing) |Clasificación de imágenes y etiquetas múltiple - Detección y clasificación de objetos - Visión artificial |
+|[Aprendizaje supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-supervised-learning)| Clasificación binaria/ de varias clases - Regresión - Previción de series temporales |Linear Learner  - Factorization Machines  - XGBoost  - K-Nearest Neighbors (k-NN) |
+|[Aprendizaje no supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-unsupervised-learning)|Ingeniería de características: reducción de la dimensionalidad - Detección de anomalías - Integraciones: convierten objetos de grandes dimensiones en espacio de baja dimensionalidad - Agrupación o agrupación en clústeres - Modelado de temas | PCA - K-Means - IP Insights - Random Cut Forest (RCF)|
+|[Análisis de texto](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-text-analysis) |Clasificación de textos - Traducción automática de Algoritmo - Resumir texto - Texto a voz | Blazing Tex - Sequence-to-Sequence - LDA - NTM
+|[Gema Image Processing](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-image-processing) |Clasificación de imágenes y etiquetas múltiple - Detección y clasificación de objetos - Visión artificial | Image Classification - Semantic Segmentation - Object Detection |
 
 ___
 
@@ -59,6 +59,16 @@ En este tutorial, hará lo siguiente:
 5. Evaluará el rendimiento de su modelo de aprendizaje automático
  
 Los recursos creados y utilizados en este tutorial se pueden utilizar en la capa gratuita de AWS. Recuerde completar el Paso 7 y terminar sus recursos. Si su cuenta ha estado activa con estos recursos por más de dos meses, se cobrará menos de 0,50 USD por ella.
+
+## Paso 0: ¿Que es XGBoost?
+
+Es una implementación de código abierto popular y eficiente del algoritmo de árboles aumentados de gradientes. La potenciación de gradientes es un algoritmo de aprendizaje supervisado que intenta predecir de forma apropiada una variable de destino mediante la combinación de un conjunto de estimaciones a partir de un conjunto de modelos más simples y más débiles. Funciona bien en competiciones de aprendizaje automático debido a su manejo robusto de una variedad de tipos de datos, relaciones, distribuciones y la variedad de hiperparámetros que puede ajustar. 
+
+Puede usar **XGBoost** para problemas de **regresión**, de **clasificación (binaria y multiclase)** y de **ranking**.
+
+Fuente: [AWS XGBoost](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/xgboost.html)
+
+Más sobre XGBoost --> [Boosting - EXPLAINED!](https://www.youtube.com/watch?v=MIPkK5ZAsms)
 
 ## Paso 1: Abra la consola de Amazon SageMaker
 

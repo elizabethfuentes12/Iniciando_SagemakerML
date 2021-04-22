@@ -61,6 +61,10 @@ En este tutorial, hará lo siguiente:
  
 Los recursos creados y utilizados en este tutorial se pueden utilizar en la capa gratuita de AWS. Recuerde completar el Paso 7 y terminar sus recursos. Si su cuenta ha estado activa con estos recursos por más de dos meses, se cobrará menos de 0,50 USD por ella.
 
+A continuación un diagrama de lo que haremos. 
+
+!["sagemaker"](imagenes/diagrama.jpeg)
+
 ## Paso 0: ¿Que es XGBoost?
 
 Es una implementación de código abierto popular y eficiente del algoritmo de árboles aumentados de gradientes. La potenciación de gradientes es un algoritmo de aprendizaje supervisado que intenta predecir de forma apropiada una variable de destino mediante la combinación de un conjunto de estimaciones a partir de un conjunto de modelos más simples y más débiles. Funciona bien en competiciones de aprendizaje automático debido a su manejo robusto de una variedad de tipos de datos, relaciones, distribuciones y la variedad de hiperparámetros que puede ajustar. 

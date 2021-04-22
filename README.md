@@ -415,6 +415,30 @@ Los hiperparámetros que tienen el mayor efecto en la optimización de las métr
 
 Sagemaker cuenta con una herramienta que permite automatizar todas estas entrenamientos de distintas combinaciones de HP el Trabajo de Ajuste de HP (HP Tunning JOB). Lo que hace es realizar un entrenamiento por cada combinación de HP que le digamos y nos entrega la mejor combinación de HP (que tiene la mejor métrica que le hayamos indicado)
 
+## Adicional
+### Para desplegar un endpoint a partir de un modelo entrenado por un trabajo en entrenamiento de SageMaker:
+
+```python
+#Para instanciar el modelo
+model_from_job = sagemaker.estimator.Estimator.attach(
+    "xgboost-2021-04-21-02-30-09-428",
+    sagemaker_session=sagemaker.Session())
+```
+### Para lanzar el modelo en el contenedor. Al igual que el paso 5a y puedes continuar con el resto de los pasos. 
+
+```python
+model_from_job.deploy(initial_instance_count=1,instance_type='ml.m4.xlarge')
+```
+### Para importar tu propio modelo entrenado a SageMaker
+Primero lo debes subir a S3
+
+```python
+from sagemaker.mxnet.model import MXNetModel
+
+sagemaker_model = MXNetModel(model_data='s3://path/to/model.tar.gz',
+                             role='arn:aws:iam::accid:sagemaker-role',
+                             entry_point='entry_point.py')
+```
 
 ## Paso 7: Termine los recursos
 En este paso, terminará los recursos relacionados con Amazon SageMaker.

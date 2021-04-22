@@ -254,6 +254,10 @@ Y el siguiente archivo aparecera en su instancia:
 
 !["sagemaker"](imagenes/3e2.png)
 
+Con las siguientes columnas y datos binarios en ellas:
+
+!["sagemaker"](imagenes/bank_clean.png)
+
 
 ### 3f. 
 
@@ -285,9 +289,13 @@ boto3.Session().resource('s3').Bucket(bucket_name).Object(os.path.join(prefix, '
 s3_input_train = sagemaker.s3_input(s3_data='s3://{}/{}/train'.format(bucket_name, prefix), content_type='csv')
 
 ```
+Crea el siguiente archivo:
+
+!["sagemaker"](imagenes/4a.png)
+
 ### 4b. 
 
-A continuación, deberá configurar la sesión de Amazon SageMaker, crear una instancia del modelo XGBoost (un estimador) y definir los hiperparámetros del modelo. Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar**:
+A continuación, deberá configurar la sesión de Amazon SageMaker, crear una instancia del modelo XGBoost (un estimador) y definir los [hiperparámetros](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/xgboost_hyperparameters.html) del modelo. Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar**:
 
 ```python
 sess = sagemaker.Session()
@@ -297,11 +305,24 @@ xgb.set_hyperparameters(max_depth=5,eta=0.2,gamma=4,min_child_weight=6,subsample
 ### 4c. 
 Con los datos cargados y el estimador XGBoost configurado, entrene el modelo a través de la optimización basada en gradientes en una instancia **ml.m4.xlarge**; copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**.
 
-Luego de algunos minutos, debería comenzar a ver los registros de entrenamiento que se generen.
-
 ```python
 xgb.fit({'train': s3_input_train})
 ```
+
+Luego de algunos minutos, debería comenzar a ver los registros de entrenamiento que se generen.
+
+Inicia: 
+
+!["sagemaker"](imagenes/4c1.png)
+
+Los extra nodes son los que se agregan al algoritmo y los pruned nodes son los que se descartan, el train-error se refiere a
+
+Finaliza: 
+
+!["sagemaker"](imagenes/4c2.png)
+
+En la imagen anterior podemos ver que el entrenamiento duro 47 segundos, que es lo que se cobrara por la maquina usada en el contenedor. 
+
 ## Paso 5: Implemente el modelo
 
 En este paso, implementará el modelo entrenado en un punto de enlace, cambiará el formato y cargará los datos CSV. Luego, ejecutará el modelo para crear predicciones.
@@ -312,6 +333,15 @@ Para implementar el modelo en un servidor y crear un punto de enlace al que pued
 ```python
 xgb_predictor = xgb.deploy(initial_instance_count=1,instance_type='ml.m4.xlarge')
 ```
+
+Al finalizar debe verse asi:
+
+!["sagemaker"](imagenes/5a.png)
+
+Tambien lo puedes visualizar en **Interferencia** --> **Puntos de enlace**
+
+!["sagemaker"](imagenes/5a2.png)
+
 ### 5b. 
 Para predecir si los clientes de los datos de prueba se inscribieron o no en el producto del banco, copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**:
 
@@ -331,18 +361,39 @@ En este paso, evaluará el rendimiento y la precisión del modelo de aprendizaje
 
 Copie y pegue el siguiente código y seleccione **Ejecutar** para comparar los valores reales con los valores predichos en una tabla denominada **matriz de confusión**.
 
-En función de las predicciones, podemos concluir que usted predijo que un cliente se inscribiría para un certificado de depósito exactamente para el 90 % de los clientes en los datos de prueba, con una precisión del 65 % (278/429) para los inscritos y del 90 % (10 785/11 928) para los no inscritos.
 
 ```python
 cm = pd.crosstab(index=test_data['y_yes'], columns=np.round(predictions_array), rownames=['Observed'], colnames=['Predicted'])
 tn = cm.iloc[0,0]; fn = cm.iloc[1,0]; tp = cm.iloc[1,1]; fp = cm.iloc[0,1]; p = (tp+tn)/(tp+tn+fp+fn)*100
-print("\n{0:<20}{1:<4.1f}%\n".format("Overall Classification Rate: ", p))
-print("{0:<15}{1:<15}{2:>8}".format("Predicted", "No Purchase", "Purchase"))
+print("\n{0:<20}{1:<4.1f}%\n".format("Tasa de clasificación general: ", p))
+print("{0:<15}{1:<15}{2:>8}".format("Predictor", "No Inscritos", "Inscritos"))
 print("Observed")
-print("{0:<15}{1:<2.0f}% ({2:<}){3:>6.0f}% ({4:<})".format("No Purchase", tn/(tn+fn)*100,tn, fp/(tp+fp)*100, fp))
-print("{0:<16}{1:<1.0f}% ({2:<}){3:>7.0f}% ({4:<}) \n".format("Purchase", fn/(tn+fn)*
+print("{0:<15}{1:<2.0f}% ({2:<}){3:>6.0f}% ({4:<})".format("No Inscritos", tn/(tn+fn)*100,tn, fp/(tp+fp)*100, fp))
+print("{0:<16}{1:<1.0f}% ({2:<}){3:>7.0f}% ({4:<}) \n".format("Inscritos", fn/(tn+fn)*
 
 ```
+El resultado del comando anterior es algo parecido a esto: 
+
+!["sagemaker"](imagenes/6a.png)
+
+En función de las predicciones, podemos concluir que se predijo que el 89.5% de los clientes se  inscribiría para un certificado de depósito, con una precisión del 65 % (278/429) para los inscritos y del 90 % (10 785/11 928) para los no inscritos.
+
+### 6b. 
+
+Este modelo es bueno para predecir los clientes no inscritos, pero no  para los inscritos.
+
+El desempeño del modelo depende de la métrica y del objetivo que tenga, por ejemplo el modelo que predice SPAM lo que interesa es que no pasen los correos validos a spam, no importa recibir uno que otro spam en el inbox. Eso significa que puedo sacrificar un poco de falsos negativos (spam en el inbox) para minimizar los falsos positivos (correos validos a spam). 
+
+Para optimizar y llegar el desempeño óptimo debemos iterar el modelo, en una primera instancia cambiando los hiperparámetros para ver si otras combinaciones permiten entrenar un modelo que entregue mejores predicciones.
+
+Los hiperparámetros ajustables del modelo XGBoost son los siguientes: 
+
+!["sagemaker"](imagenes/6b.png)
+
+Los hiperparámetros que tienen el mayor efecto en la optimización de las métricas de evaluación de XGBoost son: alpha, min_child_weight, subsample eta, y num_round.
+
+Sagemaker cuenta con una herramienta que permite automatizar todas estas entrenamientos de distintas combinaciones de HP el Trabajo de Ajuste de HP (HP Tunning JOB). Lo que hace es realizar un entrenamiento por cada combinación de HP que le digamos y nos entrega la mejor combinación de HP (que tiene la mejor métrica que le hayamos indicado)
+
 
 ## Paso 7: Termine los recursos
 En este paso, terminará los recursos relacionados con Amazon SageMaker.
@@ -369,3 +420,13 @@ ___
 Para que continues aprendiendo te dejo un link con varios ejemplos para practicar:
 
 https://github.com/aws/amazon-sagemaker-examples
+
+## Tip
+
+La fuente original de este tutorial esta en una verion 1.X de XGBoost por lo que saltan algunos errores como el de la imagen:
+
+!["sagemaker"](imagenes/error.png)
+
+Para corregirlos debes revisar la documentación de la [version 2 de XGBoost](https://sagemaker.readthedocs.io/en/stable/v2.html) 
+
+Esto lo puedes aplicar en errores similares en ejemplos de otros algoritmos.

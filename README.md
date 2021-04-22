@@ -191,6 +191,8 @@ from IPython.display import Image
 from IPython.display import display               
 from time import gmtime, strftime                 
 from sagemaker.predictor import csv_serializer   
+import sagemaker
+  
 
 # Define IAM role
 role = get_execution_role()
@@ -285,9 +287,16 @@ Para utilizar un modelo XGBoost prediseñado de Amazon SageMaker, deberá cambia
 Copie el siguiente código en una nueva celda de código y seleccione **Ejecutar** para cambiar el formato y cargar los datos:
 
 ```python
-pd.concat([train_data['y_yes'], train_data.drop(['y_no', 'y_yes'], axis=1)], axis=1).to_csv('train.csv', index=False, header=False)
-boto3.Session().resource('s3').Bucket(bucket_name).Object(os.path.join(prefix, 'train/train.csv')).upload_file('train.csv')
-s3_input_train = sagemaker.s3_input(s3_data='s3://{}/{}/train'.format(bucket_name, prefix), content_type='csv')
+(pd.concat([train_data['y_yes'], train_data.drop(['y_no', 'y_yes'], axis=1)], axis=1)
+ .to_csv('train.csv', index=False, header=False))
+
+(boto3.Session().resource('s3')
+ .Bucket(bucket_name).Object(os.path.join(prefix, 'train/train.csv'))
+ .upload_file('train.csv'))
+
+from sagemaker.inputs import TrainingInput
+
+s3_input_train = TrainingInput(s3_data='s3://{}/{}/train'.format(bucket_name, prefix), content_type='csv')
 
 ```
 Crea el siguiente archivo:
@@ -300,8 +309,11 @@ A continuación, deberá configurar la sesión de Amazon SageMaker, crear una in
 
 ```python
 sess = sagemaker.Session()
-xgb = sagemaker.estimator.Estimator(containers[my_region],role, train_instance_count=1, train_instance_type='ml.m4.xlarge',output_path='s3://{}/{}/output'.format(bucket_name, prefix),sagemaker_session=sess)
-xgb.set_hyperparameters(max_depth=5,eta=0.2,gamma=4,min_child_weight=6,subsample=0.8,silent=0,objective='binary:logistic',num_round=100)
+xgb = sagemaker.estimator.Estimator(containers[my_region],
+                                    role, instance_count=1, 
+                                    instance_type='ml.m4.xlarge',
+                                    output_path='s3://{}/{}/output'.format(bucket_name, prefix),sagemaker_session=sess)
+xgb.set_hyperparameters(max_depth=5,eta=0.2,gamma=4,min_child_weight=6,subsample=0.8,silent=0,objective='binary:logistic',num_round=100))
 ```
 ### 4c. 
 Con los datos cargados y el estimador XGBoost configurado, entrene el modelo a través de la optimización basada en gradientes en una instancia **ml.m4.xlarge**; copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**.
@@ -347,9 +359,13 @@ Tambien lo puedes visualizar en **Interferencia** --> **Puntos de enlace**
 Para predecir si los clientes de los datos de prueba se inscribieron o no en el producto del banco, copie el siguiente código en la próxima celda de código y seleccione **Ejecutar**:
 
 ```python
+from sagemaker.serializers import CSVSerializer
+
 test_data_array = test_data.drop(['y_no', 'y_yes'], axis=1).values #load the data into an array
-xgb_predictor.content_type = 'text/csv' # set the data type for an inference
-xgb_predictor.serializer = csv_serializer # set the serializer type
+
+#xgb_predictor.content_type = 'text/csv' # set the data type for an inference
+xgb_predictor.ContentType = 'text/csv' # set the data type for an inference
+xgb_predictor.serializer = CSVSerializer() # set the serializer type
 predictions = xgb_predictor.predict(test_data_array).decode('utf-8') # predict!
 predictions_array = np.fromstring(predictions[1:], sep=',') # and turn the prediction into an array
 print(predictions_array.shape)
@@ -410,6 +426,8 @@ bucket_to_delete = boto3.resource('s3').Bucket(bucket_name)
 bucket_to_delete.objects.all().delete()
 
 ```
+
+Para finalizar debes detener la instacia para evitar cargos adicionales, y si no la vas a utilizar más la puedes eliminar. 
 ___
 
 ## ¡Felicitaciones!

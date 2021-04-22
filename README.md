@@ -46,11 +46,12 @@ Fuente: https://aws.amazon.com/es/getting-started/hands-on/build-train-deploy-ma
 
 En este tutorial, aprenderá a utilizar Amazon SageMaker para crear, entrenar e implementar un modelo de aprendizaje automático (ML). Para este ejercicio, utilizaremos el conocido algoritmo de aprendizaje automático [XGBoost](https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost.html) el cual esta integrado en Sagemaker. 
 
-En este tutorial, asumirá el rol de un desarrollador de aprendizaje automático que trabaja en un banco. Se le solicita desarrollar un modelo de aprendizaje automático para predecir si los clientes se inscribirán para un certificado de depósito. El modelo se entrenará con el conjunto de datos de marketing que contiene la información demográfica de los clientes, sus respuestas a los eventos de marketing y los factores externos.
+En este tutorial, asumirás el rol de un desarrollador de machine learning que trabaja en un banco. Se le solicita desarrollar un modelo de machine learning para predecir si los clientes se inscribirán para un certificado de depósito. El modelo se entrenará con el conjunto de datos de marketing que contiene la información demográfica de los clientes, sus respuestas a los eventos de marketing y los factores externos.
 
 Los datos se etiquetaron para su conveniencia. Una columna en el conjunto de datos identifica si el cliente está inscrito para algún producto que ofrece el banco. Una versión de este conjunto de datos está disponible para el público en el repositorio de aprendizaje automático a cargo de la Universidad de California, Irvine. Este tutorial implementa un modelo de aprendizaje automático supervisado debido a que los datos están etiquetados. (El aprendizaje no supervisado tiene lugar cuando los conjuntos de datos no están etiquetados).
 
 En este tutorial, hará lo siguiente:
+
 
 1. Creará una instancia de bloc de notas
 2. Preparará los datos

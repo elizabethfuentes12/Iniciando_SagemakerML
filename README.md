@@ -44,7 +44,7 @@ ___
 
 Fuente: https://aws.amazon.com/es/getting-started/hands-on/build-train-deploy-machine-learning-model-sagemaker/
 
-En este tutorial, aprenderá a utilizar Amazon SageMaker para crear, entrenar e implementar un modelo de aprendizaje automático (ML). Para este ejercicio, utilizaremos el conocido algoritmo de aprendizaje automático [XGBoost](https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost.html) el cual esta integrado en Sagemaker. 
+Siguiendo los siguientes pasos aprenderá a utilizar  Amazon SageMaker para crear, entrenar e implementar un modelo de aprendizaje automático (ML). Para este ejercicio, utilizaremos el conocido algoritmo de aprendizaje automático [XGBoost](https://docs.aws.amazon.com/sagemaker/latest/dg/xgboost.html) el cual esta integrado en Sagemaker. 
 
 En este tutorial, asumirás el rol de un desarrollador de machine learning que trabaja en un banco. Se le solicita desarrollar un modelo de machine learning para predecir si los clientes se inscribirán para un certificado de depósito. El modelo se entrenará con el conjunto de datos de marketing que contiene la información demográfica de los clientes, sus respuestas a los eventos de marketing y los factores externos.
 
@@ -209,7 +209,7 @@ my_region = boto3.session.Session().region_name # set the region of the instance
 print("Success - the MySageMakerInstance is in the " + my_region + " region. You will use the " + containers[my_region] + " container for your SageMaker endpoint.")
 ```
 
-Al finalizar debe verse como la imagen a continación:
+Al finalizar debe verse como la imagen a continuación:
 
 !["sagemaker"](imagenes/3c.png)
 
@@ -332,7 +332,6 @@ Inicia:
 
 !["sagemaker"](imagenes/4c1.png)
 
-Los extra nodes son los que se agregan al algoritmo y los pruned nodes son los que se descartan, el train-error se refiere a
 
 Finaliza: 
 

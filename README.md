@@ -157,9 +157,9 @@ Pega el codigo en la ventana emergente y avanza con **Crear una configuración**
 !["sagemaker"](imagenes/2f3.png)
 
 ### 2e
-Agrega un repocitorio Git a tu instancia. 
+Agrega un repositorio Git a tu instancia. 
 
-En la misma edición del paso anterior, ve al fondo donde dice **Repositorios Git - opcional**, selecciona **Clone un repositorio Git público en esta instancia de bloc de notas solamente** y copia el preositorio creado para este ejemplo [Iniciando_SagemakerML](https://github.com/elizabethfuentes12/Iniciando_SagemakerML)
+En la misma edición del paso anterior, ve al fondo donde dice **Repositorios Git - opcional**, selecciona **Clone un repositorio Git público en esta instancia de bloc de notas solamente** y copia el repositorio creado para este ejemplo [Iniciando_SagemakerML](https://github.com/elizabethfuentes12/Iniciando_SagemakerML)
 
 
 !["sagemaker"](imagenes/2e2.png)

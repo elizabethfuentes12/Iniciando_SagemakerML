@@ -31,7 +31,7 @@ Fuente: https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html
 
 AWS Sagemaker proporciona una serie de algoritmos integrados que ayuda a mejorar la preforma del aprendizaje automático. 
 
-| Modelo | Tipos de problemas | Algoritmos |
+| Tipo | Tipos de problemas | Algoritmos |
 |:---:|:---:|:---:|
 |[Aprendizaje supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-supervised-learning)| Clasificación binaria/ de varias clases - Regresión - Previción de series temporales |Linear Learner  - Factorization Machines  - XGBoost  - K-Nearest Neighbors (k-NN) |
 |[Aprendizaje no supervisado](https://docs.aws.amazon.com/es_es/sagemaker/latest/dg/algos.html#algorithms-built-in-unsupervised-learning)|Ingeniería de características: reducción de la dimensionalidad - Detección de anomalías - Integraciones: convierten objetos de grandes dimensiones en espacio de baja dimensionalidad - Agrupación o agrupación en clústeres - Modelado de temas | PCA - K-Means - IP Insights - Random Cut Forest (RCF)|

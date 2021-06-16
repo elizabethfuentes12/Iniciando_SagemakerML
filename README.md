@@ -454,7 +454,7 @@ bucket_to_delete.objects.all().delete()
 
 ```
 
-Para finalizar debes detener la instacia para evitar cargos adicionales, y si no la vas a utilizar más la puedes eliminar. 
+Para finalizar debes detener la instancia para evitar cargos adicionales, y si no la vas a utilizar más la puedes eliminar. 
 ___
 
 ## ¡Felicitaciones!
